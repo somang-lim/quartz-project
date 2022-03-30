@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:tibero:thin:@10.47.39.125:8629:DB_D_GMD
+    username: GMDMF
+    password: gmdmf
+    driver-class-name: com.tmax.tibero.jdbc.TbDriver
+  quartz:    auto-startup: true
+    properties:      org:
+        quartz:
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            misfireThreshold: 60000
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+          scheduler:
+            instanceName: QuartzTestSM
