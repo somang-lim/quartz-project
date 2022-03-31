@@ -14,14 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.quartz.controller.JobController;
 import com.api.quartz.job.TestJob;
 import com.api.quartz.service.SchedulerService;
 
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 
-	private static Logger log = LoggerFactory.getLogger(JobController.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(SchedulerServiceImpl.class);
 	
 	@Autowired
 	private Scheduler scheduler;
@@ -43,10 +42,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 			scheduler.addJob(jobDetail, true, true);
 			createJob(jobKey, scheduleBuilder);
 		} catch (SchedulerException e) {
-			log.error("error : {}", e);
-			System.out.println("작업을 실행하지 못했습니다." + e);
+			LOGGER.error("addjob error : {}", e);
 		} catch (Exception e) {
-			System.out.println("createJob을 실행하지 못했습니다.");
+			LOGGER.error("createjob error : {}", e);
 		}	
 	}
 
@@ -58,16 +56,16 @@ public class SchedulerServiceImpl implements SchedulerService {
 				.build();
 		
 		scheduler.scheduleJob(trigger);
-		log.info("schedule create + action");		
+		LOGGER.info("schedule create & action");		
 	}
 
 	@Override
 	public void pauseJob(String jobName, String jobGroup) {
 		try {
 			scheduler.pauseJob(JobKey.jobKey(jobName, jobGroup));
-			log.info("scheduler pause");
+			LOGGER.info("scheduler pause");
 		} catch (SchedulerException e) {
-			log.error("error : {}", e);
+			LOGGER.error("pausejob error : {}", e);
 		}
 	}
 
@@ -75,9 +73,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 	public void resumeJob(String jobName, String jobGroup) {
 		try {
 			scheduler.resumeJob(JobKey.jobKey(jobName, jobGroup));
-			log.info("scheduler resume");
+			LOGGER.info("scheduler resume");
 		} catch (Exception e) {
-			log.error("error : {}", e);
+			LOGGER.error("resumejob error : {}", e);
 		}
 	}
 
@@ -95,16 +93,20 @@ public class SchedulerServiceImpl implements SchedulerService {
 					.build();
 			
 			scheduler.rescheduleJob(triggerKey, trigger);
-			log.info("schedule reschedule");
+			LOGGER.info("schedule reschedule");
 		} catch (SchedulerException e) {
-			log.error("error : {}", e);
+			LOGGER.error("reschedulejob error : {}", e);
 		}
 	}
 
 	@Override
-	public void deleteJob(String jobName, String jobGroup) throws Exception {
-		scheduler.deleteJob(JobKey.jobKey(jobName, jobGroup));
+	public void deleteJob(String jobName, String jobGroup) {
+		try {
+			scheduler.deleteJob(JobKey.jobKey(jobName, jobGroup));
+			LOGGER.info("schedule delete");
+		} catch (SchedulerException e) {
+			LOGGER.error("deletejob error : {}", e);
+		}
 	}
-
 
 }
