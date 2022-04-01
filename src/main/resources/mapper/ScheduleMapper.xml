@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.quartz.mapper.ScheduleMapper">
+
+	<select id="scheduleList" resultType="Schedule">
+		SELECT
+				ROWNUM AS id
+			, triggerName
+			, triggerGroup
+			, cronExpression
+			, jobName
+			, jobGroup
+			, isRunning
+			, TO_CHAR(createTime, 'YY-MM-DD HH24:MI:SS') AS createTime	
+		FROM
+			tester.test_sm_quartz
+	</select>
+
+	<insert id="addJob" parameterType="Schedule">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT tester.test_sm_quartz_seq.NEXTVAL
+			FROM dual
+		</selectKey>
+		INSERT INTO
+			tester.test_sm_quartz
+		(
+			id
+			, triggerName
+			, triggerGroup
+			, cronExpression
+			, jobName
+			, jobGroup
+		)
+		VALUES
+		(
+			#{id}
+			, #{triggerName}
+			, #{triggerGroup}
+			, #{cronExpression}
+			, #{jobName}
+			, #{jobGroup}
+		)
+	</insert>
+	
+	<select id="jobInfo" parameterType="String" resultType="Schedule">
+		SELECT
+			ROWNUM AS id
+			, triggerName
+			, triggerGroup
+			, cronExpression
+			, jobName
+			, jobGroup
+			, isRunning
+			, createTime
+			, updateTime
+		FROM
+			tester.test_sm_quartz AS q
+		WHERE 
+			triggerName = #{triggerName}
+		AND
+			triggerGroup = #{triggerGroup}
+	</select>
+
+	<update id="pauseJob" parameterType="Schedule">
+		UPDATE
+			tester.test_sm_quartz
+		SET
+			isRunning = 'N'
+		WHERE
+			triggerName = #{triggerName}
+		AND
+			triggerGroup = #{triggerGroup}
+	</update>
+	
+	<update id="resumeJob" parameterType="Schedule">
+		UPDATE
+			tester.test_sm_quartz
+		SET
+			isRunning = 'Y'
+		WHERE
+			triggerName = #{triggerName}
+		AND
+			triggerGroup = #{triggerGroup}
+	</update>
+	
+	<update id="rescheduleJob" parameterType="Schedule">
+		UPDATE
+			tester.test_sm_quartz
+		SET
+			cronExpression = #{cronExpression}
+			, isRunning = 'Y'
+			, updateTime = SYSDATE
+		WHERE
+			triggerName = #{triggerName}
+		AND
+			triggerGroup = #{triggerGroup}
+	</update>
+	
+	<select id="countJobName" parameterType="Schedule" resultType="int">
+		SELECT
+			COUNT(triggerName) AS countJobName
+		FROM
+			tester.test_sm_quartz
+		WHERE
+			jobName = #{jobName}
+		AND
+			jobGroup = #{jobGroup}
+	</select>
+	
+	<delete id="deleteJob" parameterType="Schedule">
+		DELETE FROM
+			tester.test_sm_quartz
+		WHERE
+			triggerName = #{triggerName}
+		AND
+			triggerGroup = #{triggerGroup}
+		AND
+			jobName = #{jobName}
+		AND
+			jobGroup = #{jobGroup}
+	</delete>
+</mapper>
