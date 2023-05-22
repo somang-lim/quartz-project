@@ -1,6 +1,5 @@
 package com.api.quartz.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,15 +13,16 @@ import com.api.quartz.domain.Schedule;
 import com.api.quartz.service.QuartzService;
 import com.api.quartz.service.ScheduleService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(value="/job")
+@RequiredArgsConstructor
 public class QuartzController {
 
-	@Autowired
-	private QuartzService quartzService;
+	private final QuartzService quartzService;
 	
-	@Autowired
-	private ScheduleService scheduleService;
+	private final ScheduleService scheduleService;
 
 	
 	@PostMapping("/addJob")
@@ -43,14 +43,8 @@ public class QuartzController {
 		quartzService.pauseJob(triggerName, triggerGroup);
 		
 	}
-/*	
-	@PutMapping("/pauseAllJob")
-	public void jobAllPause(@RequestParam("jobName") String jobName,
-			@RequestParam("jobGroup") String jobGroup) throws Exception {
-		
-		quartzService.pauseAllJob(jobName, jobGroup);
-	}
-*/	
+
+
 	@PutMapping("/resumeJob/{triggerName}")
 	public void resumeJob(@PathVariable("triggerName") String triggerName,
 			@RequestParam("triggerGroup") String triggerGroup) throws Exception {
@@ -59,15 +53,7 @@ public class QuartzController {
 		
 		
 	}
-/*	
-	@PutMapping("/resumeAllJob")
-	public void jobAllResume(@RequestParam("jobName") String jobName,
-			@RequestParam("jobGroup") String jobGroup) throws Exception {
-		
-		quartzService.resumeJob(jobName, jobGroup);
-		
-	}
-*/	
+
 	@PutMapping("/rescheduleJob/{triggerName}")
 	public void rescheduleJob(@PathVariable("triggerName") String triggerName,
 			@RequestParam("triggerGroup") String triggerGroup,

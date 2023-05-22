@@ -13,7 +13,7 @@ public class TestJob implements BaseJob {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		log.error("Test Job - " + new Date());
+		log.info("Test Job - " + new Date());
 	}
 
 }

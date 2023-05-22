@@ -11,26 +11,26 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.quartz.domain.Schedule;
 import com.api.quartz.job.TestJob;
 import com.api.quartz.mapper.ScheduleMapper;
 import com.api.quartz.service.QuartzService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class QuartzServiceImpl implements QuartzService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(QuartzServiceImpl.class);
 	
-	@Autowired
-	private Scheduler scheduler;
+	private final Scheduler scheduler;
+	private final ScheduleMapper scheduleMapper;
 	
-	@Autowired
-	private ScheduleMapper scheduleMapper;
-	
-	
+
 	@Override
 	public void addJob(Schedule schedule) {
 		try {
@@ -78,18 +78,7 @@ public class QuartzServiceImpl implements QuartzService {
 			LOGGER.error("pausejob error : {}", e);
 		}
 	}
-/*	
-	@Override
-	public void pauseAllJob(String jobName, String jobGroup) {
-		try {
-			scheduler.pauseJob(JobKey.jobKey(jobName, jobGroup));
-			LOGGER.info("scheduler ALL pause");
 
-		} catch (SchedulerException e) {
-			LOGGER.error("pausejob error : {}", e);
-		}
-	}
-*/	
 	@Override
 	public void resumeJob(String triggerName, String triggerGroup) {
 		Schedule jobInfo = scheduleMapper.jobInfo(triggerName, triggerGroup);
@@ -101,17 +90,7 @@ public class QuartzServiceImpl implements QuartzService {
 			LOGGER.error("resumejob error : {}", e);
 		}
 	}
-/*	
-	@Override
-	public void resumeAllJob(String jobName, String jobGroup) {
-		try {
-			scheduler.resumeJob(JobKey.jobKey(jobName, jobGroup));
-			LOGGER.info("scheduler ALL resume");
-		} catch (Exception e) {
-			LOGGER.error("resumejob error : {}", e);
-		}
-	}
-*/
+
 	@Override
 	public void rescheduleJob(String triggerName, String triggerGroup, String cronExpression) {
 		Schedule jobInfo = scheduleMapper.jobInfo(triggerName, triggerGroup);

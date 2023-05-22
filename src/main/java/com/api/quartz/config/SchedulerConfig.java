@@ -4,16 +4,17 @@ import java.io.IOException;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class SchedulerConfig {
 
-	@Autowired
-	private DataSource datasource;
+	private final DataSource datasource;
 	
 	
 	@Bean

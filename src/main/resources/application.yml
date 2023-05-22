@@ -1,11 +1,10 @@
 spring:
-  datasource:
-    url: jdbc:tibero:thin:@10.47.39.125:8629:DB_D_GMD
-    username: GMDMF
-    password: gmdmf
-    driver-class-name: com.tmax.tibero.jdbc.TbDriver
-  quartz:    auto-startup: true
-    properties:      org:
+  profiles:
+    include: dev
+  quartz:
+    auto-startup: true
+    properties:
+      org:
         quartz:
           jobStore:
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
@@ -16,9 +15,11 @@ spring:
           scheduler:
             instanceName: QuartzTestSM
   mvc:
-    view:      prefix: /WEB-INF/views/
+    view:
+      prefix: /WEB-INF/views/
       suffix: .jsp
 
 mybatis:
   type-aliases-package: com.api.quartz.domain
-  mapper-locations:  - classpath:mapper/*.xml
+  mapper-locations:
+  - classpath:mapper/*.xml

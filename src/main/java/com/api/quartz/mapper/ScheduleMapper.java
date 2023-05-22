@@ -9,20 +9,20 @@ import com.api.quartz.domain.Schedule;
 @Mapper
 public interface ScheduleMapper {
 
-	public List<Schedule> scheduleList();
+	List<Schedule> scheduleList();
 
-	public void addJob(Schedule schedule);
+	void addJob(Schedule schedule);
 	
-	public Schedule jobInfo(String triggerName, String triggerGroup);
+	Schedule jobInfo(String triggerName, String triggerGroup);
 	
-	public void pauseJob(Schedule schedule);
+	void pauseJob(Schedule schedule);
 	
-	public void resumeJob(Schedule schedule);
+	void resumeJob(Schedule schedule);
 	
-	public void rescheduleJob(Schedule schedule);
+	void rescheduleJob(Schedule schedule);
 	
-	public int countJobName(Schedule schedule);
+	int countJobName(Schedule schedule);
 	
-	public void deleteJob(Schedule schedule);
+	void deleteJob(Schedule schedule);
 	
 }

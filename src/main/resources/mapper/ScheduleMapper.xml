@@ -4,7 +4,7 @@
 
 	<select id="scheduleList" resultType="Schedule">
 		SELECT
-				ROWNUM AS id
+			ROWNUM AS id
 			, triggerName
 			, triggerGroup
 			, cronExpression
@@ -13,16 +13,16 @@
 			, isRunning
 			, TO_CHAR(createTime, 'YY-MM-DD HH24:MI:SS') AS createTime	
 		FROM
-			tester.test_sm_quartz
+			test_sm_quartz
 	</select>
 
 	<insert id="addJob" parameterType="Schedule">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			SELECT tester.test_sm_quartz_seq.NEXTVAL
+			SELECT test_sm_quartz_seq.NEXTVAL
 			FROM dual
 		</selectKey>
 		INSERT INTO
-			tester.test_sm_quartz
+			test_sm_quartz
 		(
 			id
 			, triggerName
@@ -54,7 +54,7 @@
 			, createTime
 			, updateTime
 		FROM
-			tester.test_sm_quartz AS q
+			test_sm_quartz
 		WHERE 
 			triggerName = #{triggerName}
 		AND
@@ -63,7 +63,7 @@
 
 	<update id="pauseJob" parameterType="Schedule">
 		UPDATE
-			tester.test_sm_quartz
+			test_sm_quartz
 		SET
 			isRunning = 'N'
 		WHERE
@@ -74,7 +74,7 @@
 	
 	<update id="resumeJob" parameterType="Schedule">
 		UPDATE
-			tester.test_sm_quartz
+			test_sm_quartz
 		SET
 			isRunning = 'Y'
 		WHERE
@@ -85,7 +85,7 @@
 	
 	<update id="rescheduleJob" parameterType="Schedule">
 		UPDATE
-			tester.test_sm_quartz
+			test_sm_quartz
 		SET
 			cronExpression = #{cronExpression}
 			, isRunning = 'Y'
@@ -100,7 +100,7 @@
 		SELECT
 			COUNT(triggerName) AS countJobName
 		FROM
-			tester.test_sm_quartz
+			test_sm_quartz
 		WHERE
 			jobName = #{jobName}
 		AND
@@ -109,7 +109,7 @@
 	
 	<delete id="deleteJob" parameterType="Schedule">
 		DELETE FROM
-			tester.test_sm_quartz
+			test_sm_quartz
 		WHERE
 			triggerName = #{triggerName}
 		AND
